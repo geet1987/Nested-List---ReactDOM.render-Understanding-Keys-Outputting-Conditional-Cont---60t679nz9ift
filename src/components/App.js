@@ -155,7 +155,74 @@ const states = [
 ];
 
 function App() {
-  return <div id="main"></div>;
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  let toggleSelectedState = (index) => {
+    setSelectedCity(null);
+    if (index == selectedState) {
+      setSelectedState(null);
+      return;
+    }
+    setSelectedState(index);
+  };
+
+  let toggleSelectedCity = (e, cityIndex) => {
+    e.stopPropagation();
+    if (cityIndex == selectedCity) {
+      setSelectedCity(null);
+      return;
+    }
+    setSelectedCity(cityIndex);
+  };
+  return (
+    <div id="main">
+      <ul>
+        {states.map((state, index) => {
+          return (
+            <li
+              id={"state" + (index + 1)}
+              key={index}
+              onClick={() => toggleSelectedState(index)}
+            >
+              {state.name}
+              {selectedState == index && (
+                <ul>
+                  {states[index]["cities"].map((city, cityIndex) => {
+                    return (
+                      <li
+                        id={"city" + (cityIndex + 1)}
+                        key={cityIndex}
+                        onClick={(e) => toggleSelectedCity(e, cityIndex)}
+                      >
+                        {city.name}
+                        {selectedCity == cityIndex && (
+                          <ul>
+                            {states[index]["cities"][cityIndex]["towns"].map(
+                              (town, townIndex) => {
+                                return (
+                                  <li
+                                    key={townIndex}
+                                    id={"town" + (townIndex + 1)}
+                                  >
+                                    {town.name}
+                                  </li>
+                                );
+                              }
+                            )}
+                          </ul>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 }
 
 export default App;
